@@ -6,86 +6,13 @@
 // Dependencies
 
 var http = require('http');  //adding the http module
-var https = require('https'); //adding https module
 var url = require('url'); //adding the url module
 var StringDecoder = require('string_decoder').StringDecoder; // adding the stringdecoder module for the payload
 var config = require('./config');
-var fs = require('fs');
-// var _data = require('./lib/data');
-
-// //testing 
-// _data.delete('test','newFile',function(err){
-//     console.log('this was an error',err);
-// });
-
-
 //the server should respond to all requests with a string 
 
-
-//instantiating the http server
-var httpServer = http.createServer(function(req,res){
+var server = http.createServer(function(req,res){
     
-    unifiedServer(req,res);
-
-});
-
-//start the server , and have it listen to the configured port
-
-httpServer.listen(config.httpPort,function(){
-    console.log("The server is listening on port " + config.httpPort + " in " + config.envName +" mode ");
-});
-
-//instantiate https server
-var httpsServerOptions = {
-    'key' : fs.readFileSync('./https/key.pem'),
-    'cert' : fs.readFileSync('./https/cert.pem')
-
-};
-var httpsServer = https.createServer(httpsServerOptions,function(req,res){
-    
-    unifiedServer(req,res);
-
-});
-//start https server
-httpsServer.listen(config.httpsPort,function(){
-    console.log("The server is listening on port " + config.httpsPort + " in " + config.envName +" mode ");
-});
-
-
-//define handlers
-var handlers = {};
-
-//sample handler
-
-handlers.sample = function(data,callback) {
-
-    //callback a http status code and a payload object
-    callback(406,{'name' : 'application active |handled '})
-
-};
-
-//ping handler
-handlers.ping = function(data,callback){
-    callback(200);
-};
-
-//not found handler
-
-handlers.notFound = function(data,callback){
-    callback(404);
-
-};
-//defining a request router
-
-var router = {
-    'sample' : handlers.sample,
-    'ping' : handlers.ping
-};
-
-//all unified server http and https
-
-var unifiedServer = function(req,res){
-
     //get url and parse it
 var parsedUrl = url.parse(req.url,true);
 
@@ -172,4 +99,37 @@ console.log('Request received with this payload:',buffer);
 
 
 
+});
+
+//start the server , and have it listen to the configured port
+
+server.listen(config.port,function(){
+    console.log("The server is listening on port " + config.port + " in " + config.envName +" mode ");
+});
+
+
+//define handlers
+var handlers = {};
+
+//sample handler
+
+handlers.sample = function(data,callback) {
+
+    //callback a http status code and a payload object
+    callback(406,{'name' : 'application active |handled '})
+
 };
+
+//not found handler
+
+handlers.notFound = function(data,callback){
+    callback(404);
+
+};
+//defining a request router
+
+var router = {
+    'sample' : handlers.sample
+};
+
+//all unified server http and https
