@@ -8,7 +8,7 @@
 var http = require('http');  //adding the http module
 var url = require('url'); //adding the url module
 var StringDecoder = require('string_decoder').StringDecoder; // adding the stringdecoder module for the payload
-var config = require('./config');
+var config = require('./lib/config');
 //the server should respond to all requests with a string 
 
 var server = http.createServer(function(req,res){

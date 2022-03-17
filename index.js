@@ -13,7 +13,7 @@ var config = require('./lib/config');
 var fs = require('fs');
 var handlers = require('./lib/handlers');
 var helpers = require('./lib/helpers');
-// var _data = require('./lib/data');
+var _data = require('./lib/data');
 
 // //testing 
 // _data.delete('test','newFile',function(err){
