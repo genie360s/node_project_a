@@ -9,8 +9,10 @@ var http = require('http');  //adding the http module
 var https = require('https'); //adding https module
 var url = require('url'); //adding the url module
 var StringDecoder = require('string_decoder').StringDecoder; // adding the stringdecoder module for the payload
-var config = require('./config');
+var config = require('./lib/config');
 var fs = require('fs');
+var handlers = require('./lib/handlers');
+var helpers = require('./lib/helpers');
 // var _data = require('./lib/data');
 
 // //testing 
@@ -52,34 +54,13 @@ httpsServer.listen(config.httpsPort,function(){
 });
 
 
-//define handlers
-var handlers = {};
 
-//sample handler
-
-handlers.sample = function(data,callback) {
-
-    //callback a http status code and a payload object
-    callback(406,{'name' : 'application active |handled '})
-
-};
-
-//ping handler
-handlers.ping = function(data,callback){
-    callback(200);
-};
-
-//not found handler
-
-handlers.notFound = function(data,callback){
-    callback(404);
-
-};
 //defining a request router
 
 var router = {
     'sample' : handlers.sample,
-    'ping' : handlers.ping
+    'ping' : handlers.ping,
+    'users' : handlers.users
 };
 
 //all unified server http and https
@@ -129,7 +110,7 @@ req.on('end',function(){
         'queryStringObject' : queryStringObject,
         'method' : method,
         'headers' : headers,
-        'payload' : buffer
+        'payload' : helpers.parseJsonToObject(buffer)
     };
 
 //route the request to the specified handler
